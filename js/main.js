@@ -1,3 +1,4 @@
+const NUMBER_OF_ADS = 10;
 const TIMES = ['12:00', '13:00', '14:00'];
 const TYPES = ['palace', 'flat', 'house', 'hotel'];
 const FEAUTURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -8,6 +9,11 @@ const ROOMS_MIN = 1;
 const ROOMS_MAX = 4;
 const GUESTS_MIN = 1;
 const GUESTS_MAX = 5;
+const MIN_LAT = 35.65000;
+const MAX_LAT = 35.70000;
+const MIN_LNG = 139.70000;
+const MAX_LNG = 139.80000;
+
 /**
  * Генерация случайного числа с плавающей точкой из диапазона
  * @param {Number} min - минимальное значение
@@ -28,44 +34,71 @@ function getRandomNumber(min, max, num = 0) {
   return number;
 }
 
-getRandomNumber(0.5, 3.5);
-// Генерация случайное целое число
-function getRandomInteger(min, max) {
-  return getRandomNumber(min, max);
-}
-
-getRandomInteger(1, 5);
 /**
  * Получение случайного элемента массива
  * @param {Number} array - это передаваемое число от 1 до 10
  */
-function  getRandomArray(array) {
+function  getRandomElement(array) {
   return array[getRandomNumber(0, array.length - 1)];
 }
 
-getRandomArray(5);
+getRandomElement[5, 2, 3];
+/**
+ * Получение случайной длины массива
+ * @param {Number} array - это массив случайной длины
+ */
+const requestArray = function(array) {
+  return array.slice(0, getRandomNumber(1, array.length));
+};
 
 /**
  * Генерируем объявление
  * @param {Number} index - это передаваемое число от 1 до 10
  */
+const coordinates = {
+  lat: getRandomNumber(MIN_LAT, MAX_LAT, 5),
+  lng: getRandomNumber(MIN_LNG, MAX_LNG, 5),
+};
+
 const generateAdvert =  function(index) {
   const advert = {
     author: {
-      avatar: 'img/avatars/user0' + (index + 1) + '.png'
+      avatar: `img/avatars/user0${index + 1}.png`,
     },
 
     offer: {
       title: 'Заголовок объявления',
-      address: locationLat + ', ' + locationIng,
-      price: getRandomInteger(PRICE_MIN, PRICE_MAX),
-      type: getRandomArray(TYPES),
-      rooms: getRandomInteger(ROOMS_MIN, ROOMS_MAX),
-      guests: getRandomInteger(GUESTS_MIN, GUESTS_MAX),
-      checkin: getRandomArray(TIMES),
-      checkout: getRandomArray(TIMES),
+      address: `${coordinates.lat}, ${coordinates.lng}`,
+      price: getRandomNumber(PRICE_MIN, PRICE_MAX),
+      type: getRandomElement(TYPES),
+      rooms: getRandomNumber(ROOMS_MIN, ROOMS_MAX),
+      guests: getRandomNumber(GUESTS_MIN, GUESTS_MAX),
+      checkin: getRandomElement(TIMES),
+      checkout: getRandomElement(TIMES),
+      features: requestArray(FEAUTURES),
+      description: 'Описание объявления',
+      photos: requestArray(PHOTOS),
+    },
+
+    location: {
+      latitude : `${coordinates.lat}`,
+      longitude: `${coordinates.lng}`,
     },
   };
+
+  return advert;
 };
 
 generateAdvert(6);
+
+const generateAdverts = function(number) {
+  const adverts = [];
+
+  for (let i = 0; i < number; i++) {
+    adverts.push(generateAdvert(i));
+  }
+
+  return adverts;
+};
+
+const advertisementArray = generateAdverts(NUMBER_OF_ADS);
