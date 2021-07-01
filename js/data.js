@@ -1,3 +1,6 @@
+import {getRandomNumber} from './util.js';
+import {getRandomElement} from './util.js';
+
 const NUMBER_OF_ADS = 10;
 const TIMES = ['12:00', '13:00', '14:00'];
 const TYPES = ['palace', 'flat', 'house', 'hotel'];
