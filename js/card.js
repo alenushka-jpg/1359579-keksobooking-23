@@ -6,12 +6,12 @@
 let cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
 let TYPES = {
-    'flat': 'Квартира',
-    'bungalo': 'Бунгало',
-    'house': 'Дом',
-    'palace': 'Дворец',
-    'hotel': 'Отель'
-  };
+  'flat': 'Квартира',
+  'bungalo': 'Бунгало',
+  'house': 'Дом',
+  'palace': 'Дворец',
+  'hotel': 'Отель'
+};
 
 let renderCard = function (ad) {
   let cardElement = cardTemplate.cloneNode(true);
