@@ -1,6 +1,6 @@
-let adForm = document.querySelector('.ad-form');
-let adFormHeader = document.querySelectorAll('.ad-form-header');
+const adForm = document.querySelector('.ad-form');
+const adFormHeader = document.querySelectorAll('.ad-form-header');
 
 
-form.classList.add('ad-form--disabled');
+adForm.classList.add('ad-form--disabled');
 adFormHeader.attr('disabled');

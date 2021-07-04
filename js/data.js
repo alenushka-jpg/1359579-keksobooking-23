@@ -1,7 +1,6 @@
-import {getRandomNumber} from './util.js';
-import {getRandomElement} from './util.js';
+import {getRandomNumber, getRandomElement} from './util.js';
 
-const NUMBER_OF_ADS = 10;
+// const NUMBER_OF_ADS = 10;
 const TIMES = ['12:00', '13:00', '14:00'];
 const TYPES = ['palace', 'flat', 'house', 'hotel'];
 const FEAUTURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -12,8 +11,8 @@ const ROOMS_MIN = 1;
 const ROOMS_MAX = 4;
 const GUESTS_MIN = 1;
 const GUESTS_MAX = 5;
-const MIN_LAT = 35.65000;
-const MAX_LAT = 35.70000;
+const MIN_LON = 35.65000;
+const MAX_LON = 35.70000;
 const MIN_LNG = 139.70000;
 const MAX_LNG = 139.80000;
 /**
@@ -23,6 +22,7 @@ const MAX_LNG = 139.80000;
 const requestArray = function(array) {
   return array.slice(0, getRandomNumber(1, array.length));
 };
+
 /**
  * Генерируем объявление
  * @param {Number} index - это передаваемое число от 1 до 10
@@ -54,7 +54,16 @@ const generateAdvert =  function(index) {
       longitude: `${coordinates.lng}`,
     },
   };
-return advert;
+  return advert;
 };
 
-export {generateAdvert};
+const generateAdverts = function(number) {
+  const adverts = [];
+
+  for (let index = 0; index < number; index++) {
+    adverts.push(generateAdvert(index));
+  }
+  return adverts;
+};
+
+export {generateAdverts};

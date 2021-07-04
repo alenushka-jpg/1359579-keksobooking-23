@@ -25,13 +25,4 @@ function  getRandomElement(array) {
   return array[getRandomNumber(0, array.length - 1)];
 }
 
-const generateAdverts = function(number) {
-  const adverts = [];
-
-  for (let i = 0; i < number; i++) {
-    adverts.push(generateAdvert(i));
-  }
-  return adverts;
-};
-
-const advertisementArray = generateAdverts(NUMBER_OF_ADS);
+export {getRandomNumber, getRandomElement};
