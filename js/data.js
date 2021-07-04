@@ -57,4 +57,4 @@ const generateAdvert =  function(index) {
 return advert;
 };
 
-export {generateAdverts};
+export {generateAdvert};
