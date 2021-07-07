@@ -1,7 +1,7 @@
 /**
  * Модуль генерации карточки объявления
  */
-const cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 const cardElement = cardTemplate.cloneNode(true);
 
 const types = {
@@ -26,6 +26,8 @@ const renderCard = function (ad) {
   cardElement.querySelector('.popup__photos').src = ad.offer.photos;
   cardElement.querySelector('.popup__description').textContent = ad.offer.description;
   cardElement.querySelector('.popup__avatar').src = ad.author.avatar;
+
+
 };
 
 export {renderCard};
