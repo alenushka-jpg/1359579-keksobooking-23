@@ -1,19 +1,27 @@
 const adForm = document.querySelector('.ad-form');
 const adFormElement = document.querySelectorAll('.ad-form__element');
-const mapFilters = document.querySelector('.map__filters');
+const mapFiltersForm = document.querySelector('.map__filters');
 const mapFeatures = document.querySelectorAll('.map__features');
-const elementsDisabled = [adFormElement, mapFeatures];
 
-adForm.classList.toggle('ad-form--disabled');
-mapFilters.classList.toggle('map__filters--disabled');
+/**
+ * Функция, которая выключает фильтры
+ */
+const disableFiltersForm = function () {
+  mapFiltersForm.classList.add('map__filters--disabled');
+  const arrayElements = Array.from(mapFiltersForm.children);
 
-elementsDisabled.forEach((el) => {
-  el.setAttribute('disabled', 'disabled');
-});
+  arrayElements.forEach((el) => {
+    el.setAttribute('disabled', 'disabled');
+  })
+};
+
+export {disableFiltersForm};
+
+adForm.classList.add('ad-form--disabled');
 
 
-const map = L.map('map', {
-  center: [56.4444, 56.4444],
-  zoom: 15,
-});
+// const map = L.map('map', {
+//   center: [56.4444, 56.4444],
+//   zoom: 15,
+// });
 

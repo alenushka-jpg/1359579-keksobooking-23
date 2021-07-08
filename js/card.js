@@ -2,7 +2,7 @@
  * Модуль генерации карточки объявления
  */
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
-const cardElement = cardTemplate.cloneNode(true);
+
 
 const types = {
   flat: 'Квартира',
@@ -12,10 +12,13 @@ const types = {
   hotel: 'Отель',
 };
 /**
-* renderCard - Возвращает DOM-элемент 'Карточка объявления'
-* @param {Object} ad Объявление
-*/
+ * renderCard - Возвращает DOM-элемент 'Карточка объявления'
+ * @param {Object} ad Объявление
+ * @param {Object} - Карточка объявления
+ */
 const renderCard = function (ad) {
+  const cardElement = cardTemplate.cloneNode(true);
+
   cardElement.querySelector('.popup__title').textContent = ad.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = ad.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = `${ad.offer.price  }7500 ₽/ночь`;
@@ -27,7 +30,7 @@ const renderCard = function (ad) {
   cardElement.querySelector('.popup__description').textContent = ad.offer.description;
   cardElement.querySelector('.popup__avatar').src = ad.author.avatar;
 
-
+  return cardElement;
 };
 
 export {renderCard};
