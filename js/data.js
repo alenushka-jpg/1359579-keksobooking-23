@@ -27,18 +27,18 @@ const requestArray = function(array) {
  * Генерируем объявление
  * @param {Number} index - это передаваемое число от 1 до 10
  */
-const coordinates = {
-  lat: getRandomNumber(MIN_LON, MAX_LON, 5),
-  lng: getRandomNumber(MIN_LNG, MAX_LNG, 5),
-};
-const generateAdvert =  function(index) {
+const generateAdvert =  function (index) {
+  const coordinates = {
+    latitude: getRandomNumber(MIN_LON, MAX_LON, 5),
+    longitude: getRandomNumber(MIN_LNG, MAX_LNG, 5),
+  };
   const advert = {
     author: {
       avatar: `img/avatars/user0${index + 1}.png`,
     },
     offer: {
       title: 'Заголовок объявления',
-      address: `${coordinates.lon}, ${coordinates.lng}`,
+      address: `${coordinates.latitude}, ${coordinates.longitude}`,
       price: getRandomNumber(PRICE_MIN, PRICE_MAX),
       type: getRandomElement(TYPES),
       rooms: getRandomNumber(ROOMS_MIN, ROOMS_MAX),
@@ -49,10 +49,7 @@ const generateAdvert =  function(index) {
       description: 'Описание объявления',
       photos: requestArray(PHOTOS),
     },
-    location: {
-      latitude : `${coordinates.lon}`,
-      longitude: `${coordinates.lng}`,
-    },
+    location: coordinates,
   };
   return advert;
 };

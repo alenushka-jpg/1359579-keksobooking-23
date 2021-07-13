@@ -1,7 +1,17 @@
 import {generateAdverts} from './data.js';
-import {renderCard} from './card.js';
+import {disableAdForm}from './form.js';
+import {disableFiltersForm} from './form.js';
+import {appendPinsToMap} from './map.js';
+import {initializationMap} from './form.js';
 
-const AD_COUNT = 3;
+const AD_COUNT = 23;
+
+disableFiltersForm();
+disableAdForm();
 
 const advertsData = generateAdverts(AD_COUNT);
-renderCard(advertsData[0]);
+const mapContainer = document.querySelector('.map__canvas');
+
+appendPinsToMap(advertsData, mapContainer);
+
+initializationMap();

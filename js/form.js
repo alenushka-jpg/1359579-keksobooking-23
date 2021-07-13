@@ -1,9 +1,36 @@
 const adForm = document.querySelector('.ad-form');
-const adFormHeader = document.querySelectorAll('.ad-form-header');
-const mapFilters = document.querySelector('.map__filters');
-const mapFeatures = document.querySelectorAll('.map__features');
+const mapFiltersForm = document.querySelector('.map__filters');
 
-adForm.classList.add('ad-form--disabled');
-mapFilters.classList.add('ad-form--disabled');
-adFormHeader.attr('disabled');
-mapFeatures.attr('disabled');
+/**
+ * Функции, которые выключают фильтры
+ */
+const disableAdForm = function () {
+  adForm.classList.add('ad-form--disabled');
+  const arrayFormElements = Array.from(adForm.children);
+
+  arrayFormElements.forEach((el) => {
+    el.setAttribute('disabled', 'disabled');
+  });
+};
+
+const disableFiltersForm = function () {
+  mapFiltersForm.classList.add('map__filters--disabled');
+  const arrayFiltersElements = Array.from(mapFiltersForm.children);
+
+  arrayFiltersElements.forEach((el) => {
+    el.setAttribute('disabled', 'disabled');
+  });
+};
+
+const initializationMap = function () {
+  adForm.classList.remove('ad-form--disabled');
+  
+  arrayFormElements.forEach((el) => {
+    el.removeAttribute('disabled', 'disabled');
+  });
+}
+
+export {disableFiltersForm};
+export {disableAdForm};
+export {initializationMap};
+
