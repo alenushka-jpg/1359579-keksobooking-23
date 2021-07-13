@@ -1,4 +1,20 @@
+import {renderCard} from './card.js';
+
+const UNIT_LON = 56.4444;
+const UNIT_LAT = 56.4444;
+const UNIT_ZOOM = 17;
+
 const map = L.map('map', {
-  center: [56.4444, 56.4444],
-  zoom: 17,
+  center: [UNIT_LON, UNIT_LAT],
+  zoom: UNIT_ZOOM,
+  layers: [layer1, layer2],
 });
+
+const appendPinsToMap = function(pinsData) {
+  pinsData.forEach((pinData) => {
+    renderCard(pinData);
+  });
+};
+
+export {appendPinsToMap};
+

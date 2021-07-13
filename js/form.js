@@ -22,6 +22,15 @@ const disableFiltersForm = function () {
   });
 };
 
+const initializationMap = function () {
+  adForm.classList.remove('ad-form--disabled');
+  
+  arrayFormElements.forEach((el) => {
+    el.removeAttribute('disabled', 'disabled');
+  });
+}
+
 export {disableFiltersForm};
 export {disableAdForm};
+export {initializationMap};
 
