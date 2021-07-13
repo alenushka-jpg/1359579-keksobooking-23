@@ -7,7 +7,6 @@ const UNIT_ZOOM = 17;
 const map = L.map('map', {
   center: [UNIT_LON, UNIT_LAT],
   zoom: UNIT_ZOOM,
-  layers: [layer1, layer2],
 });
 
 const appendPinsToMap = function(pinsData) {
