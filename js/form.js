@@ -22,6 +22,9 @@ const disableFiltersForm = function () {
   });
 };
 
+/**
+ * Функция, которая переводит страницу в активное состояние
+ */
 const initializationMap = function () {
   adForm.classList.remove('ad-form--disabled');
   
