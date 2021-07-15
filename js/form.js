@@ -4,7 +4,7 @@ const mapFiltersForm = document.querySelector('.map__filters');
 /**
  * Функции, которые выключают фильтры
  */
-const disableAdForm = function () {
+const disableAdForm = () => {
   adForm.classList.add('ad-form--disabled');
   const arrayFormElements = Array.from(adForm.children);
 
@@ -13,7 +13,7 @@ const disableAdForm = function () {
   });
 };
 
-const disableFiltersForm = function () {
+const disableFiltersForm = () => {
   mapFiltersForm.classList.add('map__filters--disabled');
   const arrayFiltersElements = Array.from(mapFiltersForm.children);
 
@@ -25,15 +25,21 @@ const disableFiltersForm = function () {
 /**
  * Функция, которая переводит страницу в активное состояние
  */
-const initializationMap = function () {
+const initializationMap = () =>{
   adForm.classList.remove('ad-form--disabled');
-  
+  mapFiltersForm.classList.remove('map__filters--disabled');
+  const arrayFormElements = Array.from(adForm.children);
+  const arrayFiltersElements = Array.from(mapFiltersForm.children);
+
   arrayFormElements.forEach((el) => {
     el.removeAttribute('disabled', 'disabled');
   });
-}
+
+  arrayFiltersElements.forEach((el) => {
+    el.removeAttribute('disabled', 'disabled');
+  });
+};
 
 export {disableFiltersForm};
 export {disableAdForm};
 export {initializationMap};
-
