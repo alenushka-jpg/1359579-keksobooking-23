@@ -1,8 +1,8 @@
 import {renderCard} from './card.js';
 import {initializationMap} from './form.js';
 
-const UNIT_LON = 35.68283;
-const UNIT_LAT = 139.75945;
+const UNIT_LON = 59.96831;
+const UNIT_LAT = 30.31748;
 const UNIT_ZOOM = 17;
 const addressNode = document.querySelector('#address');
 const NUMBER_AFTER_POINT = 5;
@@ -30,12 +30,18 @@ L.tileLayer(
   },
 ).addTo(map);
 
+/**
+ * Добавляем на карту специальную метку
+ */
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
   iconSize: [52, 52],
   iconAnchor: [26, 52],
 });
 
+/**
+ * Реализуем выбор адреса путём перемещения главной метки
+ */
 const mainPinMarker = L.marker(
   {
     lat: UNIT_LON,
@@ -53,6 +59,9 @@ mainPinMarker.addTo(map);
  */
 addressNode.value = `${UNIT_LON}, ${UNIT_LAT}`;
 
+/**
+ * Обработчик для получения координат
+ */
 mainPinMarker.addEventListener('moveend', (evt) => {
   const addressMarker = evt.target.getLatLng();
   addressNode.value = `${addressMarker.lat.toFixed(NUMBER_AFTER_POINT)}, ${addressMarker.lng.toFixed(NUMBER_AFTER_POINT)}`;
