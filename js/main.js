@@ -4,15 +4,12 @@ import {disableFiltersForm} from './form.js';
 import {addMarkers} from './map.js';
 import {activateMap} from './map.js';
 
-
-
 const AD_COUNT = 23;
 
 disableFiltersForm();
 disableAdForm();
 
 const advertsData = generateAdverts(AD_COUNT);
-const mapContainer = document.querySelector('.map__canvas');
 
 activateMap();
 addMarkers(advertsData);
