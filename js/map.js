@@ -1,42 +1,39 @@
 import {renderCard} from './card.js';
 import {initializationMap} from './form.js';
 
-const map = L.map('map-canvas');
-const markerGroup = L.layerGroup();
-
 const UNIT_LON = 59.96831;
 const UNIT_LAT = 30.31748;
 const UNIT_ZOOM = 17;
-const addressNode = document.querySelector('#address');
 const NUMBER_AFTER_POINT = 5;
 
-const appendPinsToMap = (pinsData) => {
-  pinsData.forEach((pinData) => {
-    renderCard(pinData);
-  });
-};
+const addressNode = document.querySelector('#address');
+
+const map = L.map('map-canvas');
+const markerGroup = L.layerGroup();
 
 /**
  * Настраиваем библиотеку leaflet
  * initializationMap - Функция перевода страницы в активное состояние при успешной загрузке карты
  * L.tileLayer - загружаем карту на страницу
  */
-map.on('load', () => {
-  initializationMap();
-})
-  .setView(
-    {
-      lat: UNIT_LAT,
-      lng: UNIT_LON,
-    }, UNIT_ZOOM,
-  );
+const activateMap = () => {
+  map.on('load', () => {
+    initializationMap();
+  })
+    .setView(
+      {
+        lat: UNIT_LAT,
+        lng: UNIT_LON,
+      }, UNIT_ZOOM,
+    );
 
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  },
-).addTo(map);
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    },
+  ).addTo(map);
+};
 
 /**
  * Добавляем на карту специальную метку
@@ -110,4 +107,4 @@ const addMarkers = (ads) => {
   });
 };
 
-export {appendPinsToMap};
+export {addMarkers, activateMap};
