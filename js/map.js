@@ -1,18 +1,26 @@
 import {renderCard} from './card.js';
 import {initializationMap} from './form.js';
 
+const map = L.map('map-canvas');
+const markerGroup = L.layerGroup();
+
 const UNIT_LON = 59.96831;
 const UNIT_LAT = 30.31748;
 const UNIT_ZOOM = 17;
 const addressNode = document.querySelector('#address');
 const NUMBER_AFTER_POINT = 5;
 
+const appendPinsToMap = (pinsData) => {
+  pinsData.forEach((pinData) => {
+    renderCard(pinData);
+  });
+};
+
 /**
- * map - настраиваем библиотеку leaflet
+ * Настраиваем библиотеку leaflet
  * initializationMap - Функция перевода страницы в активное состояние при успешной загрузке карты
  * L.tileLayer - загружаем карту на страницу
  */
-const map = L.map('map-canvas');
 map.on('load', () => {
   initializationMap();
 })
@@ -67,9 +75,38 @@ mainPinMarker.addEventListener('moveend', (evt) => {
   addressNode.value = `${addressMarker.lat.toFixed(NUMBER_AFTER_POINT)}, ${addressMarker.lng.toFixed(NUMBER_AFTER_POINT)}`;
 });
 
-const appendPinsToMap = (pinsData) => {
-  pinsData.forEach((pinData) => {
-    renderCard(pinData);
+/**
+ * Создаем метку похожего объявления
+ */
+const createMarker = (ad) => {
+  const icon = L.icon({
+    iconUrl: '/img/pin.svg',
+    iconSize: [52, 52],
+    iconAnchor: [26, 52],
+  });
+
+  const cardMarker = L.marker(
+    ad.location,
+    {
+      icon,
+    },
+  );
+
+  cardMarker
+    .addTo(markerGroup)
+    .bindPopup(
+      () => renderCard(ad),
+      {
+        keepInView: true,
+      },
+    );
+};
+
+const addMarkers = (ads) => {
+  markerGroup.clearLayers();
+
+  ads.forEach((ad) => {
+    createMarker(ad);
   });
 };
 
