@@ -6,7 +6,7 @@ const UNIT_LAT = 30.31748;
 const UNIT_ZOOM = 17;
 const NUMBER_AFTER_POINT = 5;
 
-const addressNode = document.querySelector('#address');
+const addressInput = document.querySelector('#address');
 
 const map = L.map('map-canvas');
 const markerGroup = L.layerGroup();
@@ -62,14 +62,14 @@ mainPinMarker.addTo(map);
 /**
  * Координаты начального положения метки
  */
-addressNode.value = `${UNIT_LON}, ${UNIT_LAT}`;
+addressInput.value = `${UNIT_LON}, ${UNIT_LAT}`;
 
 /**
  * Обработчик для получения координат
  */
-mainPinMarker.addEventListener('moveend', (evt) => {
+mainPinMarker.addEventListener('move', (evt) => {
   const addressMarker = evt.target.getLatLng();
-  addressNode.value = `${addressMarker.lat.toFixed(NUMBER_AFTER_POINT)}, ${addressMarker.lng.toFixed(NUMBER_AFTER_POINT)}`;
+  addressInput.value = `${addressMarker.lat.toFixed(NUMBER_AFTER_POINT)}, ${addressMarker.lng.toFixed(NUMBER_AFTER_POINT)}`;
 });
 
 /**

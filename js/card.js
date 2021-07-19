@@ -3,7 +3,6 @@
  */
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 
-
 const types = {
   flat: 'Квартира',
   bungalo: 'Бунгало',
