@@ -40,23 +40,4 @@ const initializationMap = () =>{
   });
 };
 
-const messageEscKeydownHandler = (evt) => {
-  if (evt.key === 'Escape' || evt.key === 'Esc') {
-    evt.preventDefault();
-    document.querySelectorAll('.success, .error').forEach((message) => message.remove());
-    document.removeEventListener('keydown', messageEscKeydownHandler);
-  }
-};
-
-/**
- * Обработчик сообщения клавиши Esc
- */
-const handlerEscKeydownMessage  = (evt) => {
-  if (evt.key === 'Escape' || evt.key === 'Esc') {
-    evt.preventDefault();
-    document.querySelectorAll('.success, .error').forEach((message) => message.remove());
-    document.removeEventListener('keydown', handlerEscKeydownMessage);
-  }
-};
-
 export {disableFiltersForm, disableAdForm, initializationMap};
