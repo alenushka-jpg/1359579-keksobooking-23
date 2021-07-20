@@ -67,7 +67,7 @@ const initializationMap = () =>{
 };
 
 /**
- * Функции ограничения на допустимые варианты выбора количества гостей
+ * Функция ограничения на допустимые варианты выбора количества гостей
  */
 const  handlerRoomsAndGuests = () => {
   const capacityValue = +formCapacity.value;
@@ -84,6 +84,22 @@ const  handlerRoomsAndGuests = () => {
   }
 };
 
+/**
+ * Функция показа статуса сообщения
+ */
+const showStatusMessage = (status) => {
+  const message = messageContainer[status];
 
+  if (!message) {
+    return;
+  }
+
+  document.querySelector('body').appendChild(message);
+  document.addEventListener('keydown', onSuccessMessageKeydown);
+
+  message.addEventListener('click', () => {
+    message.remove();
+  });
+};
 
 export {disableFiltersForm, disableAdForm, initializationMap};
