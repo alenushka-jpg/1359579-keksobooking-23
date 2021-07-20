@@ -1,15 +1,16 @@
-import {generateAdverts} from './data.js';
-import {disableAdForm}from './form.js';
-import {disableFiltersForm} from './form.js';
-import {addMarkers} from './map.js';
-import {activateMap} from './map.js';
+import {disableAdForm, disableFiltersForm}from './form.js';
+import {addMarkers, activateMap} from './map.js';
+import {getDataFromServer} from './create-fetch.js';
 
-const AD_COUNT = 23;
 
 disableFiltersForm();
 disableAdForm();
 
-const advertsData = generateAdverts(AD_COUNT);
+getDataFromServer((advertsData) => {
+  activateMap();
+  addMarkers(advertsData);
+}, () => {
+  console.log('Ошибка');
+})
 
-activateMap();
-addMarkers(advertsData);
+

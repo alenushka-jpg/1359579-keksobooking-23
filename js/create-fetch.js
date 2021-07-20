@@ -1,4 +1,5 @@
 const DATA_FETCH_URL =  'https://23.javascript.pages.academy/keksobooking/data';
+const DATA_SEND_URL =  'https://23.javascript.pages.academy/keksobooking/';
 
 const templateSuccessMessageInput = document.querySelector('#success').content;
 const successMessageInput = templateSuccessMessageInput.querySelector('.success');
@@ -18,16 +19,20 @@ const getDataFromServer = (onSuccess, onError) => {
       }
       throw new Error(`${response.status} ${response.statusText}`);
     })
-    .then(onSuccess)
-    .catch(onError);
+    .then((data) => {
+      onSuccess(data);
+    })
+    .catch(() => {
+      onError();
+    });
 };
 
 /**
  * sendFormData - функ-ия отправления данных формы
  */
-const sendFormData = (address, data, onSuccess, onError) => {
+const sendFormData = (data, onSuccess, onError) => {
   fetch(
-    address,
+    DATA_SEND_URL,
     {
       method: 'POST',
       body: data,
@@ -39,8 +44,12 @@ const sendFormData = (address, data, onSuccess, onError) => {
       }
       throw new Error(`${response.status} ${response.statusText}`);
     })
-    .then(onSuccess)
-    .catch(onError);
+    .then(() => {
+      onSuccess();
+    })
+    .catch(() => {
+      onError();
+    });
 };
 
 /**

@@ -1,4 +1,6 @@
-import {onSuccessMessageKeydown} from './create-fetch.js';
+import {onSuccessMessageKeydown, sendFormData} from './create-fetch.js';
+import {setInitMap} from './map.js';
+
 
 const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
@@ -107,15 +109,14 @@ const showStatusMessage = (status) => {
 const resetFormAndMap = () => {
   adForm.reset();
   mapFilters.reset();
-  formAvatarHolder.replaceChildren();
-  formPhotoHolder.replaceChildren();
+  // formAvatarHolder.replaceChildren();
+  // formPhotoHolder.replaceChildren();
   setInitMap();
 };
 
 /**
  * Функция, которая вставляет изображение
  */
-
 const insertImage = (file, container, sizes) => {
   const fileName = file.name.toLowerCase();
 
@@ -138,5 +139,18 @@ const insertImage = (file, container, sizes) => {
   return isCorrectType;
 };
 
+adForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const formData = new FormData(adForm);
+  sendFormData(
+    formData,
+    () => {
+      console.log('Успех!');
+      resetFormAndMap();
+    () => {
+      console.log('Ошибка')
+    }
+  });
+});
 
 export {disableFiltersForm, disableAdForm, initializationMap};

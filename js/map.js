@@ -1,9 +1,9 @@
 import {renderCard} from './card.js';
 import {initializationMap} from './form.js';
 
-const UNIT_LON = 59.96831;
-const UNIT_LAT = 30.31748;
-const UNIT_ZOOM = 17;
+const UNIT_LAT = 35.67673;
+const UNIT_LNG = 139.74633;
+const UNIT_ZOOM = 13;
 const NUMBER_AFTER_POINT = 5;
 
 const addressInput = document.querySelector('#address');
@@ -19,11 +19,12 @@ const markerGroup = L.layerGroup();
 const activateMap = () => {
   map.on('load', () => {
     initializationMap();
+    markerGroup.addTo(map);
   })
     .setView(
       {
         lat: UNIT_LAT,
-        lng: UNIT_LON,
+        lng: UNIT_LNG,
       }, UNIT_ZOOM,
     );
 
@@ -49,8 +50,8 @@ const mainPinIcon = L.icon({
  */
 const mainPinMarker = L.marker(
   {
-    lat: UNIT_LON,
-    lng: UNIT_LAT,
+    lat: UNIT_LAT,
+    lng: UNIT_LNG,
   },
   {
     draggable: true,
@@ -62,7 +63,7 @@ mainPinMarker.addTo(map);
 /**
  * Координаты начального положения метки
  */
-addressInput.value = `${UNIT_LON}, ${UNIT_LAT}`;
+addressInput.value = `${UNIT_LAT}, ${UNIT_LNG}`;
 
 /**
  * Обработчик для получения координат
@@ -113,14 +114,14 @@ const addMarkers = (ads) => {
 const setInitMap  = () => {
   mainPinMarker.setLatLng({
     lat: UNIT_LAT,
-    lng: UNIT_LON,
+    lng: UNIT_LNG,
   });
 
   mainPinMarker.fire('move');
 
   map.setView({
     lat: UNIT_LAT,
-    lng: UNIT_LON,
+    lng: UNIT_LNG,
   }, UNIT_ZOOM);
 };
 
