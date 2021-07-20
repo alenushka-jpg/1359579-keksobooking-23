@@ -112,5 +112,31 @@ const resetFormAndMap = () => {
   setInitMap();
 };
 
+/**
+ * Функция, которая вставляет изображение
+ */
+
+const insertImage = (file, container, sizes) => {
+  const fileName = file.name.toLowerCase();
+
+  const isCorrectType = FILE_TYPES.some((fileType) => fileName.endsWith(fileType));
+
+  if (isCorrectType) {
+    const reader = new FileReader();
+    const image = document.createElement('img');
+    image.width = sizes.width;
+    image.height = sizes.height;
+
+    reader.addEventListener('load', () => {
+      image.src = reader.result;
+      container.replaceChildren(image);
+    });
+
+    reader.readAsDataURL(file);
+  }
+
+  return isCorrectType;
+};
+
 
 export {disableFiltersForm, disableAdForm, initializationMap};
