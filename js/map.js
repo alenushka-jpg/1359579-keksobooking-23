@@ -107,4 +107,21 @@ const addMarkers = (ads) => {
   });
 };
 
-export {addMarkers, activateMap};
+/**
+ * Функция активации карты
+ */
+const setInitMap  = () => {
+  mainPinMarker.setLatLng({
+    lat: UNIT_LAT,
+    lng: UNIT_LON,
+  });
+
+  mainPinMarker.fire('move');
+
+  map.setView({
+    lat: UNIT_LAT,
+    lng: UNIT_LON,
+  }, UNIT_ZOOM);
+};
+
+export {addMarkers, activateMap, setInitMap};

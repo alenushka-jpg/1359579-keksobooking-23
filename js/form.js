@@ -26,7 +26,6 @@ const typePrice = {
 const MAX_ROOMS = 100;
 const MIN_CAPACITY = 0;
 
-
 /**
  * Функции, которые выключают фильтры
  */
@@ -101,5 +100,17 @@ const showStatusMessage = (status) => {
     message.remove();
   });
 };
+
+/**
+ * Функция сброса формы и карты
+ */
+const resetFormAndMap = () => {
+  adForm.reset();
+  mapFilters.reset();
+  formAvatarHolder.replaceChildren();
+  formPhotoHolder.replaceChildren();
+  setInitMap();
+};
+
 
 export {disableFiltersForm, disableAdForm, initializationMap};
