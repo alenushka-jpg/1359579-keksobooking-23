@@ -30,6 +30,7 @@ const formTimeIn = document.querySelector('#timein');
 const formTimeOut = document.querySelector('#timeout');
 const formAvatar = document.querySelector('#avatar');
 const formPhoto = document.querySelector('#images');
+const addressInput = document.querySelector('#address');
 
 const typePrice = {
   bungalow: 0,
@@ -37,6 +38,29 @@ const typePrice = {
   hotel: 3000,
   house: 5000,
   palace: 10000,
+};
+
+/**
+ * Функция ограничения на допустимые варианты выбора количества гостей
+ */
+const  onRoomsAndGuestsChange = () => {
+  const capacityValue = +formCapacity.value;
+  const roomValue = +formRoomNumber.value;
+
+  if (roomValue !== MAX_ROOMS && (capacityValue > roomValue || capacityValue === MIN_CAPACITY)) {
+    formCapacity.setCustomValidity(`Для данного количества комнат возможное количество гостей: не меньше 1 и не больше ${roomValue}`);
+  } else if (roomValue === MAX_ROOMS && capacityValue !== MIN_CAPACITY) {
+    formCapacity.setCustomValidity('100 комнат не для гостей');
+  } else {
+    formCapacity.setCustomValidity('');
+
+    formCapacity.reportValidity();
+  }
+};
+
+const addCheckHandlers = () => {
+  formCapacity.addEventListener('change', onRoomsAndGuestsChange);
+  formRoomNumber.addEventListener('change', onRoomsAndGuestsChange);
 };
 
 /**
@@ -80,29 +104,6 @@ const initializationMap = () =>{
 };
 
 /**
- * Функция ограничения на допустимые варианты выбора количества гостей
- */
-const  onRoomsAndGuestsChange = () => {
-  const capacityValue = +formCapacity.value;
-  const roomValue = +formRoomNumber.value;
-
-  if (roomValue !== MAX_ROOMS && (capacityValue > roomValue || capacityValue === MIN_CAPACITY)) {
-    formCapacity.setCustomValidity(`Для данного количества комнат возможное количество гостей: не меньше 1 и не больше ${roomValue}`);
-  } else if (roomValue === MAX_ROOMS && capacityValue !== MIN_CAPACITY) {
-    formCapacity.setCustomValidity('100 комнат не для гостей');
-  } else {
-    formCapacity.setCustomValidity('');
-
-    formCapacity.reportValidity();
-  }
-};
-
-const addCheckHandlers = () => {
-  formCapacity.addEventListener('change', onRoomsAndGuestsChange);
-  formRoomNumber.addEventListener('change', onRoomsAndGuestsChange);
-}
-
-/**
  * Функция показа статуса сообщения
  */
 const showStatusMessage = (status) => {
@@ -123,7 +124,7 @@ const showStatusMessage = (status) => {
 /**
  * Функция сброса формы и карты
  */
-const resetFormAndMap = () => {
+const resetFormsAndMap = () => {
   adForm.reset();
   mapFilters.reset();
   // formAvatarHolder.replaceChildren();
@@ -156,23 +157,26 @@ const insertImage = (file, container, sizes) => {
   return isCorrectType;
 };
 
-adForm.addEventListener('submit', (e) => {
-  e.preventDefault();
+/**
+ * Добавлен обработчик соб-ия на показ статуса сообщения
+ */
+adForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
   const formData = new FormData(adForm);
   sendFormData(
     formData,
     () => {
-      console.log('Успех!');
-      resetFormAndMap();
+      showStatusMessage('success');
+      resetFormsAndMap();
     },
     () => {
-      console.log('Ошибка')
-    }
+      showStatusMessage('error');
+    },
   );
 });
 
-formReset.addEventListener('click', (e) => {
-  e.preventDefault();
+formReset.addEventListener('click', (evt) => {
+  evt.preventDefault();
   resetFormsAndMap();
 });
 
@@ -266,4 +270,4 @@ formPhoto.addEventListener('change', () => {
 });
 
 
-export {disableFiltersForm, disableAdForm, initializationMap};
+export {disableFiltersForm, disableAdForm, initializationMap, addressInput, showStatusMessage};
