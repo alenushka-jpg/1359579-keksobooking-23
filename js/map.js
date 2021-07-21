@@ -1,12 +1,10 @@
 import {renderCard} from './card.js';
-import {initializationMap} from './form.js';
+import {initializationMap, addressInput} from './form.js';
 
-const UNIT_LON = 59.96831;
-const UNIT_LAT = 30.31748;
-const UNIT_ZOOM = 17;
+const UNIT_LAT = 35.67673;
+const UNIT_LNG = 139.74633;
+const UNIT_ZOOM = 13;
 const NUMBER_AFTER_POINT = 5;
-
-const addressNode = document.querySelector('#address');
 
 const map = L.map('map-canvas');
 const markerGroup = L.layerGroup();
@@ -19,11 +17,12 @@ const markerGroup = L.layerGroup();
 const activateMap = () => {
   map.on('load', () => {
     initializationMap();
+    markerGroup.addTo(map);
   })
     .setView(
       {
         lat: UNIT_LAT,
-        lng: UNIT_LON,
+        lng: UNIT_LNG,
       }, UNIT_ZOOM,
     );
 
@@ -49,8 +48,8 @@ const mainPinIcon = L.icon({
  */
 const mainPinMarker = L.marker(
   {
-    lat: UNIT_LON,
-    lng: UNIT_LAT,
+    lat: UNIT_LAT,
+    lng: UNIT_LNG,
   },
   {
     draggable: true,
@@ -62,14 +61,14 @@ mainPinMarker.addTo(map);
 /**
  * Координаты начального положения метки
  */
-addressNode.value = `${UNIT_LON}, ${UNIT_LAT}`;
+addressInput.value = `${UNIT_LAT}, ${UNIT_LNG}`;
 
 /**
  * Обработчик для получения координат
  */
-mainPinMarker.addEventListener('moveend', (evt) => {
+mainPinMarker.addEventListener('move', (evt) => {
   const addressMarker = evt.target.getLatLng();
-  addressNode.value = `${addressMarker.lat.toFixed(NUMBER_AFTER_POINT)}, ${addressMarker.lng.toFixed(NUMBER_AFTER_POINT)}`;
+  addressInput.value = `${addressMarker.lat.toFixed(NUMBER_AFTER_POINT)}, ${addressMarker.lng.toFixed(NUMBER_AFTER_POINT)}`;
 });
 
 /**
@@ -107,4 +106,21 @@ const addMarkers = (ads) => {
   });
 };
 
-export {addMarkers, activateMap};
+/**
+ * Функция активации карты
+ */
+const setInitMap  = () => {
+  mainPinMarker.setLatLng({
+    lat: UNIT_LAT,
+    lng: UNIT_LNG,
+  });
+
+  mainPinMarker.fire('move');
+
+  map.setView({
+    lat: UNIT_LAT,
+    lng: UNIT_LNG,
+  }, UNIT_ZOOM);
+};
+
+export {addMarkers, activateMap, setInitMap};
