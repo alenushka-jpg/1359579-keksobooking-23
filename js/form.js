@@ -29,6 +29,7 @@ const formPrice = document.querySelector('#price');
 const formTimeIn = document.querySelector('#timein');
 const formTimeOut = document.querySelector('#timeout');
 const formAvatar = document.querySelector('#avatar');
+const formPhoto = document.querySelector('#images');
 
 const typePrice = {
   bungalow: 0,
@@ -247,6 +248,21 @@ formAvatar.addEventListener('change', () => {
   }
 
   formAvatar.reportValidity();
+});
+
+/**
+ * Добавлен обработчик события на загрузку картинки
+ */
+formPhoto.addEventListener('change', () => {
+  const filePhoto = formPhoto.files[0];
+
+  if (!insertImage(filePhoto, formPhotoHolder, {width: PHOTO_WIDTH, height: PHOTO_HEIGHT})) {
+    formPhoto.setCustomValidity(`Можно загружать только файлы в формате: ${FILE_TYPES.join(', ')}`);
+  } else {
+    formPhoto.setCustomValidity('');
+  }
+
+  formPhoto.reportValidity();
 });
 
 
