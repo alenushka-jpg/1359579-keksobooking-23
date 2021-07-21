@@ -111,19 +111,19 @@ function createErrorMessage () {
 }
 
 
-adForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  sendFormData(
-    new FormData(evt.target), // данные формы
-    () => {
-      formReset(); // сброс карты и формы в изначальное состояние
-      createSuccessMessage(); // показ попапа об успехе
-    },
-    () => {
-      createErrorMessage(); // показ попапа в случае ошибок
-    },
-  );
-});
+// adForm.addEventListener('submit', (evt) => {
+//   evt.preventDefault();
+//   sendFormData(
+//     new FormData(evt.target), // данные формы
+//     () => {
+//       formReset(); // сброс карты и формы в изначальное состояние
+//       createSuccessMessage(); // показ попапа об успехе
+//     },
+//     () => {
+//       createErrorMessage(); // показ попапа в случае ошибок
+//     },
+//   );
+// });
 
 
 export {getDataFromServer, sendFormData, onSuccessMessageKeydown};
