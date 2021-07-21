@@ -17,6 +17,7 @@ const formPhotoHolder = document.querySelector('.ad-form__photo');
 const formCapacity = document.querySelector('#capacity');
 const formRoomNumber = document.querySelector('#room_number');
 const formTitle = document.querySelector('#title');
+const formType = document.querySelector('#type');
 
 const typePrice = {
   bungalow: 0,
@@ -167,7 +168,7 @@ formReset.addEventListener('click', (e) => {
 });
 
 /**
- * Добавлен обработчик события на мин-макс символов
+ * Добавлен обработчик события на мин-макс кол-во символов
  */
 formTitle.addEventListener('input', () => {
   const valueLength = formTitle.value.length;
@@ -183,6 +184,16 @@ formTitle.addEventListener('input', () => {
   }
 
   formTitleContainer.reportValidity();
+});
+
+/**
+ * Добавлен обработчик события на тип жилья
+ */
+formType.addEventListener('change', () => {
+  const typeMinPrice = typePrice[formType.value];
+
+  formPrice.min = typeMinPrice;
+  formPrice.placeholder = typeMinPrice;
 });
 
 export {disableFiltersForm, disableAdForm, initializationMap};
