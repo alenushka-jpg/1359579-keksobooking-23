@@ -4,6 +4,10 @@ import {setInitMap} from './map.js';
 const MAX_ROOMS = 100;
 const MIN_CAPACITY = 0;
 const FILE_TYPES = ['jpg', 'png'];
+const AVATAR_WIDTH = 40;
+const AVATAR_HEIGHT = 44;
+const PHOTO_WIDTH = 70;
+const PHOTO_HEIGHT = 70;
 
 const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
@@ -24,6 +28,7 @@ const formType = document.querySelector('#type');
 const formPrice = document.querySelector('#price');
 const formTimeIn = document.querySelector('#timein');
 const formTimeOut = document.querySelector('#timeout');
+const formAvatar = document.querySelector('#avatar');
 
 const typePrice = {
   bungalow: 0,
@@ -218,6 +223,9 @@ formPrice.addEventListener('input', () => {
   formPrice.reportValidity();
 });
 
+/**
+ * Добавлен обработчик события на время выезда и заезда
+ */
 formTimeIn.addEventListener('change', () => {
   formTimeOut.value = formTimeIn.value;
 });
@@ -226,6 +234,20 @@ formTimeOut.addEventListener('change', () => {
   formTimeIn.value = formTimeOut.value;
 });
 
+/**
+ * Добавлен обработчик события на загрузку фотографии
+ */
+formAvatar.addEventListener('change', () => {
+  const fileAvatar = formAvatar.files[0];
+
+  if (!insertImage(fileAvatar, formAvatarHolder, {width: AVATAR_WIDTH, height: AVATAR_HEIGHT})) {
+    formAvatar.setCustomValidity(`Можно загружать только файлы в формате: ${FILE_TYPES.join(', ')}`);
+  } else {
+    formAvatar.setCustomValidity('');
+  }
+
+  formAvatar.reportValidity();
+});
 
 
 export {disableFiltersForm, disableAdForm, initializationMap};
