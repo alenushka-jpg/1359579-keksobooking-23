@@ -9,10 +9,10 @@ const AVATAR_HEIGHT = 44;
 const PHOTO_WIDTH = 70;
 const PHOTO_HEIGHT = 70;
 
-const adForm = document.querySelector('.ad-form');
+export const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
 
-const formReset = document.querySelector('.ad-form__reset');
+export const formReset = document.querySelector('.ad-form__reset');
 const messageContainer = {
   success: document.querySelector('#success').content.querySelector('.success'),
   error: document.querySelector('#error').content.querySelector('.error'),
