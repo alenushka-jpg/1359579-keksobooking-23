@@ -16,6 +16,7 @@ const formPhotoHolder = document.querySelector('.ad-form__photo');
 
 const formCapacity = document.querySelector('#capacity');
 const formRoomNumber = document.querySelector('#room_number');
+const formTitle = document.querySelector('#title');
 
 const typePrice = {
   bungalow: 0,
@@ -65,12 +66,13 @@ const initializationMap = () =>{
   arrayFiltersElements.forEach((el) => {
     el.removeAttribute('disabled', 'disabled');
   });
+  addCheckHandlers();
 };
 
 /**
  * Функция ограничения на допустимые варианты выбора количества гостей
  */
-const  handlerRoomsAndGuests = () => {
+const  onRoomsAndGuestsChange = () => {
   const capacityValue = +formCapacity.value;
   const roomValue = +formRoomNumber.value;
 
@@ -84,6 +86,11 @@ const  handlerRoomsAndGuests = () => {
     formCapacity.reportValidity();
   }
 };
+
+const addCheckHandlers = () => {
+  formCapacity.addEventListener('change', onRoomsAndGuestsChange);
+  formRoomNumber.addEventListener('change', onRoomsAndGuestsChange);
+}
 
 /**
  * Функция показа статуса сообщения
@@ -147,10 +154,35 @@ adForm.addEventListener('submit', (e) => {
     () => {
       console.log('Успех!');
       resetFormAndMap();
+    },
     () => {
       console.log('Ошибка')
     }
-  });
+  );
+});
+
+formReset.addEventListener('click', (e) => {
+  e.preventDefault();
+  resetFormsAndMap();
+});
+
+/**
+ * Добавлен обработчик события на мин-макс символов
+ */
+formTitle.addEventListener('input', () => {
+  const valueLength = formTitle.value.length;
+  const minValueLength = +formTitle.minLength;
+  const maxValueLength = +formTitle.maxLength;
+
+  if (valueLength < minValueLength) {
+    formTitle.setCustomValidity(`Ещё ${minValueLength - valueLength} симв.`);
+  } else if (valueLength > maxValueLength) {
+    formTitle.setCustomValidity(`Удалите лишние ${valueLength - maxValueLength} симв.`);
+  } else {
+    formTitle.setCustomValidity('');
+  }
+
+  formTitleContainer.reportValidity();
 });
 
 export {disableFiltersForm, disableAdForm, initializationMap};
