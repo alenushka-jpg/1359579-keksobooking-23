@@ -18,6 +18,7 @@ const formCapacity = document.querySelector('#capacity');
 const formRoomNumber = document.querySelector('#room_number');
 const formTitle = document.querySelector('#title');
 const formType = document.querySelector('#type');
+const formPrice = document.querySelector('#price');
 
 const typePrice = {
   bungalow: 0,
@@ -194,6 +195,25 @@ formType.addEventListener('change', () => {
 
   formPrice.min = typeMinPrice;
   formPrice.placeholder = typeMinPrice;
+});
+
+/**
+ * Добавлен обработчик события на прайс
+ */
+formPrice.addEventListener('input', () => {
+  const value = +formPrice.value;
+  const minValue = +formPrice.min;
+  const maxValue = +formPrice.max;
+
+  if (value < minValue) {
+    formPrice.setCustomValidity(`Минимальная цена - ${minValue} руб.`);
+  } else if (value > maxValue) {
+    formPrice.setCustomValidity(`Максимальная цена - ${maxValue} руб.`);
+  } else {
+    formPrice.setCustomValidity('');
+  }
+
+  formPrice.reportValidity();
 });
 
 export {disableFiltersForm, disableAdForm, initializationMap};
