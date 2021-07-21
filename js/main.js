@@ -1,5 +1,5 @@
-import {disableAdForm, disableFiltersForm}from './form.js';
-import {addMarkers, activateMap, showStatusMessage} from './map.js';
+import {disableAdForm, disableFiltersForm, showStatusMessage}from './form.js';
+import {addMarkers, activateMap } from './map.js';
 import {getDataFromServer} from './create-fetch.js';
 
 disableFiltersForm();

@@ -1,5 +1,5 @@
 import {renderCard} from './card.js';
-import {initializationMap, addressInput} from './form.js';
+import {initializationMap} from './form.js';
 
 const UNIT_LAT = 35.67673;
 const UNIT_LNG = 139.74633;
@@ -8,6 +8,8 @@ const NUMBER_AFTER_POINT = 5;
 
 const map = L.map('map-canvas');
 const markerGroup = L.layerGroup();
+
+const addressInput = document.querySelector('#address');
 
 /**
  * Настраиваем библиотеку leaflet

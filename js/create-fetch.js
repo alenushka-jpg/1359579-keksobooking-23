@@ -44,8 +44,8 @@ const sendFormData = (data, onSuccess, onError) => {
       }
       throw new Error(`${response.status} ${response.statusText}`);
     })
-    .then(() => {
-      onSuccess();
+    .then((data) => {
+      onSuccess(data);
     })
     .catch(() => {
       onError();

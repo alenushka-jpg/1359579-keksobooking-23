@@ -30,7 +30,6 @@ const formTimeIn = document.querySelector('#timein');
 const formTimeOut = document.querySelector('#timeout');
 const formAvatar = document.querySelector('#avatar');
 const formPhoto = document.querySelector('#images');
-const addressInput = document.querySelector('#address');
 
 const typePrice = {
   bungalow: 0,
@@ -270,4 +269,4 @@ formPhoto.addEventListener('change', () => {
 });
 
 
-export {disableFiltersForm, disableAdForm, initializationMap, addressInput, showStatusMessage};
+export {disableFiltersForm, disableAdForm, initializationMap, showStatusMessage};
