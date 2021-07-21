@@ -1,6 +1,9 @@
 import {onSuccessMessageKeydown, sendFormData} from './create-fetch.js';
 import {setInitMap} from './map.js';
 
+const MAX_ROOMS = 100;
+const MIN_CAPACITY = 0;
+const FILE_TYPES = ['jpg', 'png'];
 
 const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
@@ -19,6 +22,8 @@ const formRoomNumber = document.querySelector('#room_number');
 const formTitle = document.querySelector('#title');
 const formType = document.querySelector('#type');
 const formPrice = document.querySelector('#price');
+const formTimeIn = document.querySelector('#timein');
+const formTimeOut = document.querySelector('#timeout');
 
 const typePrice = {
   bungalow: 0,
@@ -27,9 +32,6 @@ const typePrice = {
   house: 5000,
   palace: 10000,
 };
-
-const MAX_ROOMS = 100;
-const MIN_CAPACITY = 0;
 
 /**
  * Функции, которые выключают фильтры
@@ -184,7 +186,7 @@ formTitle.addEventListener('input', () => {
     formTitle.setCustomValidity('');
   }
 
-  formTitleContainer.reportValidity();
+  formTitle.reportValidity();
 });
 
 /**
@@ -215,5 +217,15 @@ formPrice.addEventListener('input', () => {
 
   formPrice.reportValidity();
 });
+
+formTimeIn.addEventListener('change', () => {
+  formTimeOut.value = formTimeIn.value;
+});
+
+formTimeOut.addEventListener('change', () => {
+  formTimeIn.value = formTimeOut.value;
+});
+
+
 
 export {disableFiltersForm, disableAdForm, initializationMap};
