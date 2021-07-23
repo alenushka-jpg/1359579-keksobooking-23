@@ -1,13 +1,16 @@
-import {disableAdForm, disableFiltersForm, showStatusMessage}from './form.js';
-import {addMarkers, activateMap } from './map.js';
-import {getDataFromServer} from './create-fetch.js';
+import {disablePage, publishAdSubmit, onButtonReset, getAvatarPreview, getPhotoPreview}from './form.js';
+import {getDataFromServer} from './create-fetch';
+import {activateMap, mainCoordinatesPin} from './map.js';
 
-disableFiltersForm();
-disableAdForm();
+disablePage();
+activateMap();
+mainCoordinatesPin();
+getAvatarPreview();
+getPhotoPreview();
 
 getDataFromServer((advertsData) => {
   activateMap();
-  addMarkers(advertsData);
-}, () => {
-  showStatusMessage('error');
+  mainCoordinatesPin(advertsData);
+  publishAdSubmit();
+  onButtonReset();
 });
