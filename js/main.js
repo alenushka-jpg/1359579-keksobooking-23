@@ -18,7 +18,7 @@ getDataFromServer((advertsData) => {
   activateMap();
   addPinsToMap(advertsData.slice(0, NUMBER));
   setFilterChange(
-    () => renderPinList(advertsData)
+    () => renderPinList(advertsData),
   );
   enableMapFilters();
   onButtonReset(() => {
