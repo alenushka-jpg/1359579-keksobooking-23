@@ -10,4 +10,5 @@ const debounce = (callback, timeoutDelay) => {
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
 };
+
 export {isEscapeEvent, debounce};

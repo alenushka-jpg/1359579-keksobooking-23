@@ -100,6 +100,12 @@ const createMarker = (ad) => {
     );
 };
 
+const addPinsToMap = (pinsData) => {
+  pinsData.forEach((pin) => {
+    createMarker(pin);
+  });
+};
+
 const clearMarker = () => markerGroup.clearLayers();
 
 /**
@@ -127,5 +133,5 @@ const resetPage  = () => {
   clearMarker();
 };
 
-export  {UNIT_LAT, UNIT_LNG, activateMap, createMarker, mainCoordinatesPin, resetPage, clearMarker};
+export  {UNIT_LAT, UNIT_LNG, activateMap, createMarker, mainCoordinatesPin, resetPage, clearMarker, addPinsToMap};
 

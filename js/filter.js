@@ -37,7 +37,7 @@ const onChangeHandler = () => {
     }
     if (housePrice !== ANY) {
       const elementPrice = element.offer.price.toString();
-      const price;
+      const price
       if (elementPrice < window.data.price.min) {
         price = HousePriceValue.LOW;
       }

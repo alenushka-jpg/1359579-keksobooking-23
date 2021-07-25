@@ -1,6 +1,6 @@
 import {sendFormData} from './create-fetch.js';
 import {UNIT_LAT, UNIT_LNG, resetPage} from './map.js';
-import {showSuccessModal, showErrorModal} from './popup';
+import {showSuccessModal, showErrorModal} from './popup.js';
 
 const FILE_TYPES = ['jpg', 'png'];
 const PHOTO_WIDTH = 70;
@@ -131,6 +131,7 @@ const getEndingGuests = (guestCount) => {
   }
   return `для ${guestCount} гостя`;
 };
+
 /**
  * Функция ограничения на допустимые варианты выбора количества гостей
  */
@@ -148,9 +149,6 @@ const onRoomsAndGuestsChange = () => {
   }
   formCapacity.reportValidity();
 };
-
-formRoomNumber.addEventListener('change', onRoomsAndGuestsChange);
-formCapacity.addEventListener('change', onRoomsAndGuestsChange);
 
 /**
  * Функция ограничения о вводе допустимого кол-ва символов в поле «Заголовок объявления»
@@ -170,8 +168,6 @@ const onTitleInput = () => {
   formTitle.reportValidity();
 };
 
-formTitle.addEventListener('input', onTitleInput);
-
 /**
 //  * Функция, на изменения поля «Тип жилья» на минимальное значение поля «Цена за ночь»
 //  */
@@ -179,8 +175,6 @@ const onTypeChange = () => {
   formPrice.placeholder = typePrice[formType.value];
   formPrice.min = typePrice[formType.value];
 };
-
-formType.addEventListener('change', onTypeChange);
 
 /**
 //  * Функция, на указание допустимой цены в поле «Цена за ночь»
@@ -199,8 +193,6 @@ const onPriceInput = () => {
   formPrice.reportValidity();
 };
 
-formPrice.addEventListener('input', onPriceInput);
-
 /**
 //  * Функция, на синхронизацию поля «Время выезда» изменения значения «Время заезда»
 //  */
@@ -212,8 +204,15 @@ const onTimeOutChange = () => {
   formTimeIn.value = formTimeOut.value;
 };
 
-formTimeIn.addEventListener('change', onTimeInChange);
-formTimeOut.addEventListener('change', onTimeOutChange);
+const addValidationForm = () => {
+  formRoomNumber.addEventListener('change', onRoomsAndGuestsChange);
+  formCapacity.addEventListener('change', onRoomsAndGuestsChange);
+  formTitle.addEventListener('input', onTitleInput);
+  formType.addEventListener('change', onTypeChange);
+  formPrice.addEventListener('input', onPriceInput);
+  formTimeIn.addEventListener('change', onTimeInChange);
+  formTimeOut.addEventListener('change', onTimeOutChange);
+};
 
 /**
  * Функция неактивного состояния страницы
@@ -238,21 +237,25 @@ const disableMapFilters = () => {
   });
 };
 
+/**
+ * Функция активного состояния фильтра
+ */
+const enableMapFilters = () => {
+  mapFilters.classList.remove('map__filters--disabled');
+  const arrayFiltersElements = Array.from(mapFilters.children);
+  arrayFiltersElements.forEach((el) => {
+    el.removeAttribute('disabled', 'disabled');
+  });
+};
 
 /**
  * Функция, которая переводит страницу в активное состояние
  */
 const initializationAdd = () =>{
   adForm.classList.remove('ad-form--disabled');
-  mapFilters.classList.remove('map__filters--disabled');
   const arrayFormElements = Array.from(adForm.children);
-  const arrayFiltersElements = Array.from(mapFilters.children);
 
   arrayFormElements.forEach((el) => {
-    el.removeAttribute('disabled', 'disabled');
-  });
-
-  arrayFiltersElements.forEach((el) => {
     el.removeAttribute('disabled', 'disabled');
   });
 };
@@ -272,13 +275,13 @@ const publishAdSubmit = (sub) => {
     evt.preventDefault();
     const formData = new FormData(evt.target);
     sendFormData(
+      formData,
       () => {
         showSuccessModal();
         resetPage();
         sub();
       },
-      showErrorModal,
-      formData);
+      showErrorModal);
   });
 };
 
@@ -291,6 +294,5 @@ const onButtonReset = (sub) => {
   });
 };
 
-
 export {adForm, mapFilters, formPhotoHolder, avatarPreview, disablePage, disableMapFilters, initializationAdd, getAddressCoordinates, publishAdSubmit,
-  onButtonReset, onTypeChange, createPhotos, getEndingRooms, getEndingGuests, getAvatarPreview, getPhotoPreview};
+  onButtonReset, onTypeChange, createPhotos, getEndingRooms, getEndingGuests, getAvatarPreview, getPhotoPreview, enableMapFilters, addValidationForm};
