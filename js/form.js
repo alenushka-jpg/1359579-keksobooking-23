@@ -1,26 +1,18 @@
-import {onSuccessMessageKeydown, sendFormData} from './create-fetch.js';
-import {setInitMap} from './map.js';
+import {sendFormData} from './create-fetch.js';
+import {UNIT_LAT, UNIT_LNG, resetPage} from './map.js';
+import {showSuccessModal, showErrorModal} from './popup.js';
 
-const MAX_ROOMS = 100;
-const MIN_CAPACITY = 0;
 const FILE_TYPES = ['jpg', 'png'];
-const AVATAR_WIDTH = 40;
-const AVATAR_HEIGHT = 44;
 const PHOTO_WIDTH = 70;
 const PHOTO_HEIGHT = 70;
+const MIN_LENGTH = 30;
+const MAX_LENGTH = 100;
+const MAX_PRICE = 1000000;
 
 const adForm = document.querySelector('.ad-form');
-const mapFilters = document.querySelector('.map__filters');
-
 const formReset = document.querySelector('.ad-form__reset');
-const messageContainer = {
-  success: document.querySelector('#success').content.querySelector('.success'),
-  error: document.querySelector('#error').content.querySelector('.error'),
-};
 
-const formAvatarHolder = document.querySelector('.ad-form-header__preview');
-const formPhotoHolder = document.querySelector('.ad-form__photo');
-
+const mapFilters = document.querySelector('.map__filters');
 const formCapacity = document.querySelector('#capacity');
 const formRoomNumber = document.querySelector('#room_number');
 const formTitle = document.querySelector('#title');
@@ -28,9 +20,13 @@ const formType = document.querySelector('#type');
 const formPrice = document.querySelector('#price');
 const formTimeIn = document.querySelector('#timein');
 const formTimeOut = document.querySelector('#timeout');
+const formAddress = document.querySelector('#address');
+
+const formAvatarHolder = document.querySelector('.ad-form-header__preview');
+const avatarPreview = formAvatarHolder.querySelector('img').cloneNode(true);
+const formPhotoHolder = document.querySelector('.ad-form__photo');
 const formAvatar = document.querySelector('#avatar');
 const formPhoto = document.querySelector('#images');
-const addressInput = document.querySelector('#address');
 
 const typePrice = {
   bungalow: 0,
@@ -41,32 +37,187 @@ const typePrice = {
 };
 
 /**
- * Функция ограничения на допустимые варианты выбора количества гостей
+ * Функция выбрать фотографию
  */
-const  onRoomsAndGuestsChange = () => {
-  const capacityValue = +formCapacity.value;
-  const roomValue = +formRoomNumber.value;
+const renderPhoto = (chooseFile, sub) => {
+  chooseFile.addEventListener('change', () => {
+    const file = chooseFile.files[0];
+    const fileName = file.name.toLowerCase();
+    const matchup = FILE_TYPES.some((it) => fileName.endsWith(it));
 
-  if (roomValue !== MAX_ROOMS && (capacityValue > roomValue || capacityValue === MIN_CAPACITY)) {
-    formCapacity.setCustomValidity(`Для данного количества комнат возможное количество гостей: не меньше 1 и не больше ${roomValue}`);
-  } else if (roomValue === MAX_ROOMS && capacityValue !== MIN_CAPACITY) {
-    formCapacity.setCustomValidity('100 комнат не для гостей');
-  } else {
-    formCapacity.setCustomValidity('');
-
-    formCapacity.reportValidity();
-  }
-};
-
-const addCheckHandlers = () => {
-  formCapacity.addEventListener('change', onRoomsAndGuestsChange);
-  formRoomNumber.addEventListener('change', onRoomsAndGuestsChange);
+    if (matchup) {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        const result = reader.result;
+        sub(result);
+      });
+      reader.readAsDataURL(file);
+    }
+  });
 };
 
 /**
- * Функции, которые выключают фильтры
+ * Функция создания превью фотографии пользователя
  */
-const disableAdForm = () => {
+const getAvatar = (result) => {
+  const avatarFragment = document.createDocumentFragment();
+  avatarPreview.src = result;
+  avatarFragment.appendChild(avatarPreview);
+  formAvatarHolder.innerHTML = '';
+  formAvatarHolder.appendChild(avatarFragment);
+};
+
+/**
+ * Функция создания превью фотографии жилья
+ */
+const getPhoto = (result) => {
+  formPhotoHolder.innerHTML = '';
+  const photoFragment = document.createDocumentFragment();
+  const element = document.createElement('img');
+  element.src = result;
+  element.alt = 'Фото жилья';
+  element.width = PHOTO_WIDTH;
+  element.height = PHOTO_HEIGHT;
+  photoFragment.appendChild(element);
+  formPhotoHolder.appendChild(photoFragment);
+};
+
+/**
+ * Функция создания фотографии жилья
+ */
+const createPhotos = (photos) => {
+  const fragmentPhotos = document.createDocumentFragment();
+
+  photos.forEach((photoSrc) => {
+    const newPhoto = document.createElement('img');
+    newPhoto.src = photoSrc;
+    newPhoto.classList.add('popup__photo');
+    newPhoto.alt = 'Фотография жилья';
+    newPhoto.setAttribute('width', '45');
+    newPhoto.setAttribute('height', '40');
+    fragmentPhotos.appendChild(newPhoto);
+  });
+  return fragmentPhotos;
+};
+
+const getAvatarPreview = () => renderPhoto(formAvatar, getAvatar);
+const getPhotoPreview = () => renderPhoto(formPhoto, getPhoto);
+
+/**
+ * Функция на получение окончаний комнат
+ */
+const getEndingRooms = (roomCount) => {
+  switch (roomCount) {
+    case 1:
+      return 'комната';
+    case 2:
+    case 3:
+    case 4:
+      return 'комнаты';
+    default:
+      return 'комнат';
+  }
+};
+
+/**
+ * Функция на получение окончаний гостей
+ */
+const getEndingGuests = (guestCount) => {
+  if (guestCount === 0) {
+    return 'не для гостей';
+  }
+  if (guestCount > 1) {
+    return `для ${guestCount} гостей`;
+  }
+  return `для ${guestCount} гостя`;
+};
+
+/**
+ * Функция ограничения на допустимые варианты выбора количества гостей
+ */
+const onRoomsAndGuestsChange = () => {
+  if (formRoomNumber.value === '1' && formCapacity.value !== '1') {
+    formCapacity.setCustomValidity('В 1 комнате можно разместить только 1 гостя');
+  } else if (formRoomNumber.value === '2' && formCapacity.value !== '1' && formCapacity.value !== '2') {
+    formCapacity.setCustomValidity('В 2 комнатах можно разместить только от 1 до 2 гостей');
+  } else if (formRoomNumber.value === '3' && formCapacity.value === '0') {
+    formCapacity.setCustomValidity('В 3 комнатах можно разместить только от 1 до 3 гостей');
+  } else if (formRoomNumber.value === '100' && formCapacity.value !== '0') {
+    formCapacity.setCustomValidity('100 комнат не для гостей');
+  } else {
+    formCapacity.setCustomValidity('');
+  }
+  formCapacity.reportValidity();
+};
+
+/**
+ * Функция ограничения о вводе допустимого кол-ва символов в поле «Заголовок объявления»
+ */
+const onTitleInput = () => {
+  const titleLength = formTitle.value.length;
+  if (titleLength < MIN_LENGTH) {
+    formTitle.style.borderColor = 'red';
+    formTitle.setCustomValidity(`Напишите ещё ${MIN_LENGTH - titleLength} символов`);
+  } else if (titleLength > MAX_LENGTH) {
+    formTitle.style.borderColor = 'red';
+    formTitle.setCustomValidity(`Удалите ${titleLength - MAX_LENGTH} лишних символов`);
+  } else {
+    formTitle.style.borderColor = 'white';
+    formTitle.setCustomValidity('');
+  }
+  formTitle.reportValidity();
+};
+
+/**
+//  * Функция, на изменения поля «Тип жилья» на минимальное значение поля «Цена за ночь»
+//  */
+const onTypeChange = () => {
+  formPrice.placeholder = typePrice[formType.value];
+  formPrice.min = typePrice[formType.value];
+};
+
+/**
+//  * Функция, на указание допустимой цены в поле «Цена за ночь»
+//  */
+const onPriceInput = () => {
+  const valuePrice = formPrice.value;
+  if (valuePrice < typePrice[formType.value]) {
+    formPrice.style.borderColor = 'red';
+  } else if (valuePrice > MAX_PRICE) {
+    formPrice.style.borderColor = 'red';
+    formPrice.setCustomValidity(`Максимальная цена за ночь ${MAX_PRICE}.`);
+  } else {
+    formPrice.style.borderColor = 'white';
+    formPrice.setCustomValidity('');
+  }
+  formPrice.reportValidity();
+};
+
+/**
+//  * Функция, на синхронизацию поля «Время выезда» изменения значения «Время заезда»
+//  */
+const onTimeInChange = () => {
+  formTimeOut.value = formTimeIn.value;
+};
+
+const onTimeOutChange = () => {
+  formTimeIn.value = formTimeOut.value;
+};
+
+const addValidationForm = () => {
+  formRoomNumber.addEventListener('change', onRoomsAndGuestsChange);
+  formCapacity.addEventListener('change', onRoomsAndGuestsChange);
+  formTitle.addEventListener('input', onTitleInput);
+  formType.addEventListener('change', onTypeChange);
+  formPrice.addEventListener('input', onPriceInput);
+  formTimeIn.addEventListener('change', onTimeInChange);
+  formTimeOut.addEventListener('change', onTimeOutChange);
+};
+
+/**
+ * Функция неактивного состояния страницы
+ */
+const disablePage = () => {
   adForm.classList.add('ad-form--disabled');
   const arrayFormElements = Array.from(adForm.children);
 
@@ -75,199 +226,73 @@ const disableAdForm = () => {
   });
 };
 
-const disableFiltersForm = () => {
+/**
+ * Функция неактивного состояния фильтра
+ */
+const disableMapFilters = () => {
   mapFilters.classList.add('map__filters--disabled');
   const arrayFiltersElements = Array.from(mapFilters.children);
-
   arrayFiltersElements.forEach((el) => {
     el.setAttribute('disabled', 'disabled');
   });
 };
 
 /**
+ * Функция активного состояния фильтра
+ */
+const enableMapFilters = () => {
+  mapFilters.classList.remove('map__filters--disabled');
+  const arrayFiltersElements = Array.from(mapFilters.children);
+  arrayFiltersElements.forEach((el) => {
+    el.removeAttribute('disabled', 'disabled');
+  });
+};
+
+/**
  * Функция, которая переводит страницу в активное состояние
  */
-const initializationMap = () =>{
+const initializationAdd = () =>{
   adForm.classList.remove('ad-form--disabled');
-  mapFilters.classList.remove('map__filters--disabled');
   const arrayFormElements = Array.from(adForm.children);
-  const arrayFiltersElements = Array.from(mapFilters.children);
 
   arrayFormElements.forEach((el) => {
     el.removeAttribute('disabled', 'disabled');
   });
+};
 
-  arrayFiltersElements.forEach((el) => {
-    el.removeAttribute('disabled', 'disabled');
+/**
+ * Функция передачи координат главной метки
+ */
+const getAddressCoordinates = () => {
+  formAddress.value = `${UNIT_LAT}, ${UNIT_LNG}`;
+};
+
+/**
+ * Функция на отправку объявления по кнопке "опубликовать"
+ */
+const publishAdSubmit = (sub) => {
+  adForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const formData = new FormData(evt.target);
+    sendFormData(
+      formData,
+      () => {
+        showSuccessModal();
+        resetPage();
+        sub();
+      },
+      showErrorModal);
   });
-  addCheckHandlers();
 };
 
-/**
- * Функция показа статуса сообщения
- */
-const showStatusMessage = (status) => {
-  const message = messageContainer[status];
-
-  if (!message) {
-    return;
-  }
-
-  document.querySelector('body').appendChild(message);
-  document.addEventListener('keydown', onSuccessMessageKeydown);
-
-  message.addEventListener('click', () => {
-    message.remove();
+// Нажатие на кнопку "очистить" (reset-форма)
+const onButtonReset = (sub) => {
+  formReset.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    resetPage();
+    sub();
   });
 };
 
-/**
- * Функция сброса формы и карты
- */
-const resetFormsAndMap = () => {
-  adForm.reset();
-  mapFilters.reset();
-  // formAvatarHolder.replaceChildren();
-  // formPhotoHolder.replaceChildren();
-  setInitMap();
-};
-
-/**
- * Функция, которая вставляет изображение
- */
-const insertImage = (file, container, sizes) => {
-  const fileName = file.name.toLowerCase();
-
-  const isCorrectType = FILE_TYPES.some((fileType) => fileName.endsWith(fileType));
-
-  if (isCorrectType) {
-    const reader = new FileReader();
-    const image = document.createElement('img');
-    image.width = sizes.width;
-    image.height = sizes.height;
-
-    reader.addEventListener('load', () => {
-      image.src = reader.result;
-      container.replaceChildren(image);
-    });
-
-    reader.readAsDataURL(file);
-  }
-
-  return isCorrectType;
-};
-
-/**
- * Добавлен обработчик соб-ия на показ статуса сообщения
- */
-adForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const formData = new FormData(adForm);
-  sendFormData(
-    formData,
-    () => {
-      showStatusMessage('success');
-      resetFormsAndMap();
-    },
-    () => {
-      showStatusMessage('error');
-    },
-  );
-});
-
-formReset.addEventListener('click', (evt) => {
-  evt.preventDefault();
-  resetFormsAndMap();
-});
-
-/**
- * Добавлен обработчик события на мин-макс кол-во символов
- */
-formTitle.addEventListener('input', () => {
-  const valueLength = formTitle.value.length;
-  const minValueLength = +formTitle.minLength;
-  const maxValueLength = +formTitle.maxLength;
-
-  if (valueLength < minValueLength) {
-    formTitle.setCustomValidity(`Ещё ${minValueLength - valueLength} симв.`);
-  } else if (valueLength > maxValueLength) {
-    formTitle.setCustomValidity(`Удалите лишние ${valueLength - maxValueLength} симв.`);
-  } else {
-    formTitle.setCustomValidity('');
-  }
-
-  formTitle.reportValidity();
-});
-
-/**
- * Добавлен обработчик события на тип жилья
- */
-formType.addEventListener('change', () => {
-  const typeMinPrice = typePrice[formType.value];
-
-  formPrice.min = typeMinPrice;
-  formPrice.placeholder = typeMinPrice;
-});
-
-/**
- * Добавлен обработчик события на прайс
- */
-formPrice.addEventListener('input', () => {
-  const value = +formPrice.value;
-  const minValue = +formPrice.min;
-  const maxValue = +formPrice.max;
-
-  if (value < minValue) {
-    formPrice.setCustomValidity(`Минимальная цена - ${minValue} руб.`);
-  } else if (value > maxValue) {
-    formPrice.setCustomValidity(`Максимальная цена - ${maxValue} руб.`);
-  } else {
-    formPrice.setCustomValidity('');
-  }
-
-  formPrice.reportValidity();
-});
-
-/**
- * Добавлен обработчик события на время выезда и заезда
- */
-formTimeIn.addEventListener('change', () => {
-  formTimeOut.value = formTimeIn.value;
-});
-
-formTimeOut.addEventListener('change', () => {
-  formTimeIn.value = formTimeOut.value;
-});
-
-/**
- * Добавлен обработчик события на загрузку фотографии
- */
-formAvatar.addEventListener('change', () => {
-  const fileAvatar = formAvatar.files[0];
-
-  if (!insertImage(fileAvatar, formAvatarHolder, {width: AVATAR_WIDTH, height: AVATAR_HEIGHT})) {
-    formAvatar.setCustomValidity(`Можно загружать только файлы в формате: ${FILE_TYPES.join(', ')}`);
-  } else {
-    formAvatar.setCustomValidity('');
-  }
-
-  formAvatar.reportValidity();
-});
-
-/**
- * Добавлен обработчик события на загрузку картинки
- */
-formPhoto.addEventListener('change', () => {
-  const filePhoto = formPhoto.files[0];
-
-  if (!insertImage(filePhoto, formPhotoHolder, {width: PHOTO_WIDTH, height: PHOTO_HEIGHT})) {
-    formPhoto.setCustomValidity(`Можно загружать только файлы в формате: ${FILE_TYPES.join(', ')}`);
-  } else {
-    formPhoto.setCustomValidity('');
-  }
-
-  formPhoto.reportValidity();
-});
-
-
-export {disableFiltersForm, disableAdForm, initializationMap, addressInput, showStatusMessage};
+export {adForm, mapFilters, formPhotoHolder, avatarPreview, disablePage, disableMapFilters, initializationAdd, getAddressCoordinates, publishAdSubmit,
+  onButtonReset, onTypeChange, createPhotos, getEndingRooms, getEndingGuests, getAvatarPreview, getPhotoPreview, enableMapFilters, addValidationForm};

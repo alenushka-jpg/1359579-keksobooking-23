@@ -1,23 +1,31 @@
 import {renderCard} from './card.js';
-import {initializationMap, addressInput} from './form.js';
+import {initializationAdd, getAddressCoordinates, adForm, avatarPreview,
+  formPhotoHolder, onTypeChange, mapFilters} from './form.js';
 
 const UNIT_LAT = 35.67673;
 const UNIT_LNG = 139.74633;
 const UNIT_ZOOM = 13;
 const NUMBER_AFTER_POINT = 5;
+const IMG_DEFAULT = 'img/muffin-grey.svg';
 
 const map = L.map('map-canvas');
-const markerGroup = L.layerGroup();
+const markerGroup = L.layerGroup().addTo(map);
+const formAddress = document.querySelector('#address');
 
 /**
  * Настраиваем библиотеку leaflet
- * initializationMap - Функция перевода страницы в активное состояние при успешной загрузке карты
+ * initializationAdd- Функция перевода страницы в активное состояние при успешной загрузке карты
  * L.tileLayer - загружаем карту на страницу
  */
 const activateMap = () => {
   map.on('load', () => {
-    initializationMap();
-    markerGroup.addTo(map);
+    initializationAdd(),
+    getAddressCoordinates(
+      {
+        lat: UNIT_LAT,
+        lng: UNIT_LNG,
+      },
+    );
   })
     .setView(
       {
@@ -59,16 +67,11 @@ const mainPinMarker = L.marker(
 mainPinMarker.addTo(map);
 
 /**
- * Координаты начального положения метки
+ * Функция определения координат
  */
-addressInput.value = `${UNIT_LAT}, ${UNIT_LNG}`;
-
-/**
- * Обработчик для получения координат
- */
-mainPinMarker.addEventListener('move', (evt) => {
+const mainCoordinatesPin = () => mainPinMarker.on('move', (evt) => {
   const addressMarker = evt.target.getLatLng();
-  addressInput.value = `${addressMarker.lat.toFixed(NUMBER_AFTER_POINT)}, ${addressMarker.lng.toFixed(NUMBER_AFTER_POINT)}`;
+  formAddress.value = `${addressMarker.lat.toFixed(NUMBER_AFTER_POINT)}, ${addressMarker.lng.toFixed(NUMBER_AFTER_POINT)}`;
 });
 
 /**
@@ -77,8 +80,8 @@ mainPinMarker.addEventListener('move', (evt) => {
 const createMarker = (ad) => {
   const icon = L.icon({
     iconUrl: '/img/pin.svg',
-    iconSize: [52, 52],
-    iconAnchor: [26, 52],
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
   });
 
   const cardMarker = L.marker(
@@ -98,29 +101,38 @@ const createMarker = (ad) => {
     );
 };
 
-const addMarkers = (ads) => {
-  markerGroup.clearLayers();
-
-  ads.forEach((ad) => {
-    createMarker(ad);
+const addPinsToMap = (pinsData) => {
+  pinsData.forEach((pin) => {
+    createMarker(pin);
   });
 };
 
+const clearMarker = () => markerGroup.clearLayers();
+
 /**
- * Функция активации карты
+ * Функция перехода формы и карты в дефолтное состояние
  */
-const setInitMap  = () => {
+const resetPage  = () => {
   mainPinMarker.setLatLng({
     lat: UNIT_LAT,
     lng: UNIT_LNG,
   });
-
-  mainPinMarker.fire('move');
-
   map.setView({
     lat: UNIT_LAT,
     lng: UNIT_LNG,
   }, UNIT_ZOOM);
+  adForm.reset();
+  avatarPreview.src = IMG_DEFAULT;
+  formPhotoHolder.innerHTML = '';
+
+  const adFormInputs = adForm.querySelectorAll('input');
+  adFormInputs.forEach((input) => input.style.borderColor = '');
+  const resetMainPin = mainPinMarker.getLatLng();
+  getAddressCoordinates(resetMainPin);
+  mapFilters.reset();
+  onTypeChange();
+  clearMarker();
 };
 
-export {addMarkers, activateMap, setInitMap};
+export  {UNIT_LAT, UNIT_LNG, activateMap, createMarker, mainCoordinatesPin, resetPage, clearMarker, addPinsToMap};
+

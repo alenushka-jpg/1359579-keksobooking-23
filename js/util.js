@@ -1,28 +1,14 @@
 /**
- * getRandomNumber - Возвращает случайное число с плавающей точкой из диапазона
- * @param {Number} min - минимальное значение
- * @param {Number} max - максимальное значение
- * @param {Number} num - количеством знаков после запятой
- * @return {Number} - случайное число
+ * Функция события Escape
  */
-function getRandomNumber(min, max, num = 0) {
-  if (min < 0 || max < 0) {
-    return 'Числа не могут быть отрицательными';
-  }
+const isEscapeEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-  if (min > max) {
-    [min, max] = [max, min];
-  }
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
 
-  const number = +(min - 0.5 + Math.random() * (max - min + 1)).toFixed(num);
-  return number;
-}
-/**
- * getRandomElement - Возвращает случайный элемент массива.
- * @param {Number} array - это передаваемое число от 1 до 10
- */
-function  getRandomElement(array) {
-  return array[getRandomNumber(0, array.length - 1)];
-}
-
-export {getRandomNumber, getRandomElement};
+export {isEscapeEvent, debounce};
