@@ -10,6 +10,7 @@ const IMG_DEFAULT = 'img/muffin-grey.svg';
 
 const map = L.map('map-canvas');
 const markerGroup = L.layerGroup().addTo(map);
+const formAddress = document.querySelector('#address');
 
 /**
  * Настраиваем библиотеку leaflet
@@ -70,7 +71,7 @@ mainPinMarker.addTo(map);
  */
 const mainCoordinatesPin = () => mainPinMarker.on('move', (evt) => {
   const addressMarker = evt.target.getLatLng();
-  getAddressCoordinates.value = `${addressMarker.lat.toFixed(NUMBER_AFTER_POINT)}, ${addressMarker.lng.toFixed(NUMBER_AFTER_POINT)}`;
+  formAddress.value = `${addressMarker.lat.toFixed(NUMBER_AFTER_POINT)}, ${addressMarker.lng.toFixed(NUMBER_AFTER_POINT)}`;
 });
 
 /**

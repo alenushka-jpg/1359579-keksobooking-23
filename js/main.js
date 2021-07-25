@@ -1,6 +1,9 @@
 import {disablePage, publishAdSubmit, onButtonReset, getAvatarPreview, getPhotoPreview, disableMapFilters, enableMapFilters, addValidationForm}from './form.js';
 import {getDataFromServer} from './create-fetch.js';
 import {activateMap, mainCoordinatesPin, addPinsToMap} from './map.js';
+import {setFilterChange, renderPinList} from './filter.js';
+
+const NUMBER = 10;
 
 disablePage();
 disableMapFilters();
@@ -13,8 +16,12 @@ addValidationForm();
 
 getDataFromServer((advertsData) => {
   activateMap();
-  mainCoordinatesPin;
-  addPinsToMap(advertsData.slice(0,10));
+  addPinsToMap(advertsData.slice(0, NUMBER));
+  setFilterChange(
+    () => renderPinList(advertsData)
+  );
   enableMapFilters();
-  onButtonReset();
+  onButtonReset(() => {
+    addPinsToMap(advertsData.slice(0, NUMBER));
+  });
 });

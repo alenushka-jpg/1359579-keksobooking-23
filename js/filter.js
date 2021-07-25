@@ -1,55 +1,73 @@
-const ANY = 'any';
+import {createMarker, clearMarker} from './map.js';
 
-const houseType = document.querySelector('#housing-type');
-const housePrice = document.querySelector('#housing-rooms');
-const houseRooms = document.querySelector('#room_number');
-const houseGuests = document.querySelector('#housing-guests');
+const MAX_OFFERS_COUNT = 10;
 
-const onChangeHandler = () => {
-  const houseType = selectHouseType.value;
-  const housePrice = selectHousePrice.value;
-  const houseRooms = selectHouseRooms.value.toString();
-  const houseGuests = selectHouseGuests.value.toString();
-
-  const filteredArray = () => {
-    const isType = true;
-    const isRooms = true;
-    const isGuests = true;
-    const isPrice = true;
-    const isFeatures = true;
-
-    const checkedFeatures = document.querySelectorAll('input[name="features"]:checked');
-    if (checkedFeatures.length) {
-      checkedFeatures.forEach((feature) => {
-        if (element.offer.features.indexOf(feature.value) === -1) {
-          isFeatures = false;
-        }
-      });
-    };
-    if (houseType !== ANY) {
-      isType = element.offer.type === houseType;
-    }
-    if (houseRooms !== ANY) {
-      isRooms = element.offer.rooms.toString() === houseRooms;
-    }
-    if (houseGuests !== ANY) {
-      isGuests = element.offer.guests.toString() === houseGuests;
-    }
-    if (housePrice !== ANY) {
-      const elementPrice = element.offer.price.toString();
-      const price
-      if (elementPrice < window.data.price.min) {
-        price = HousePriceValue.LOW;
-      }
-      if (elementPrice > window.data.price.max) {
-        price = HousePriceValue.HIGH;
-      }
-      if (elementPrice < window.data.price.max && elementPrice > window.data.price.min) {
-        price = HousePriceValue.MIDDLE;
-      }
-      isPrice = price === housePrice;
-    }
-    return isType && isRooms && isGuests && isPrice && isFeatures;
-  };
-  render(loadedPins.filter(filteredArray));
+const priceMap = {
+  low: {
+    start: 0,
+    end: 10000,
+  },
+  middle: {
+    start: 10000,
+    end: 50000,
+  },
+  high: {
+    start: 50000,
+    end: Infinity,
+  },
 };
+const formFilterElement = document.querySelector('.map__filters');
+const fieldFilterElements = formFilterElement.children;
+const typeFilter = formFilterElement.querySelector('#housing-type');
+const roomsFilter = formFilterElement.querySelector('#housing-rooms');
+const priceFilter = formFilterElement.querySelector('#housing-price');
+const guestsFilter = formFilterElement.querySelector('#housing-guests');
+
+const filterOffers = ({offer}) => {
+  const checkedFeatures = fieldFilterElements.querySelectorAll('input[type="checkbox"]:checked');
+
+  const checkFeature = () => {
+    if (offer.features) {
+      return [...checkedFeatures].every((feature) => (offer.features.includes(feature.value)));
+    }
+  };
+
+  const checkType = () => offer.type === typeFilter.value || typeFilter.value === 'any';
+  const checkRooms = () => offer.rooms === +roomsFilter.value || roomsFilter.value === 'any';
+  const checkGuests = () => offer.guests === +guestsFilter.value || guestsFilter.value === 'any';
+  const checkPrice = () => priceFilter.value === 'any' ? true :
+    offer.price >= priceMap[priceFilter.value].start && offer.price < priceMap[priceFilter.value].end;
+
+  if (
+    checkType() &&
+    checkRooms() &&
+    checkGuests() &&
+    checkPrice() &&
+    checkFeature()
+  ) {
+    return true;
+  }
+};
+
+const renderPinList = (offers) => {
+  clearMarker();
+  offers
+    .slice()
+    .filter(filterOffers)
+    .slice(0, MAX_OFFERS_COUNT)
+    .forEach((offer) => {
+      createMarker(offer);
+    });
+};
+
+const setFilterChange = (cb) => {
+  formFilterElement.addEventListener('change', () => {
+    cb();
+  });
+};
+
+const resetFilter = () => {
+  formFilterElement.reset();
+};
+
+export {renderPinList, setFilterChange, resetFilter };
