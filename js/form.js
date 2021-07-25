@@ -216,22 +216,28 @@ formTimeIn.addEventListener('change', onTimeInChange);
 formTimeOut.addEventListener('change', onTimeOutChange);
 
 /**
- * Функция неактивного состояния страницы и фильтра для карты
+ * Функция неактивного состояния страницы
  */
 const disablePage = () => {
   adForm.classList.add('ad-form--disabled');
-  mapFilters.classList.add('map__filters--disabled');
-
   const arrayFormElements = Array.from(adForm.children);
-  const arrayFiltersElements = Array.from(mapFilters.children);
 
   arrayFormElements.forEach((el) => {
     el.setAttribute('disabled', 'disabled');
   });
+};
+
+/**
+ * Функция неактивного состояния фильтра
+ */
+const disableMapFilters = () => {
+  mapFilters.classList.add('map__filters--disabled');
+  const arrayFiltersElements = Array.from(mapFilters.children);
   arrayFiltersElements.forEach((el) => {
     el.setAttribute('disabled', 'disabled');
   });
 };
+
 
 /**
  * Функция, которая переводит страницу в активное состояние
@@ -286,5 +292,5 @@ const onButtonReset = (sub) => {
 };
 
 
-export {adForm, mapFilters, formPhotoHolder, avatarPreview, disablePage, initializationAdd, getAddressCoordinates, publishAdSubmit,
+export {adForm, mapFilters, formPhotoHolder, avatarPreview, disablePage, disableMapFilters, initializationAdd, getAddressCoordinates, publishAdSubmit,
   onButtonReset, onTypeChange, createPhotos, getEndingRooms, getEndingGuests, getAvatarPreview, getPhotoPreview};

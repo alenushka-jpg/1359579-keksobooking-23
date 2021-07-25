@@ -8,9 +8,9 @@ mainCoordinatesPin();
 getAvatarPreview();
 getPhotoPreview();
 
-getDataFromServer((advertsData) => {
-  activateMap();
-  mainCoordinatesPin(advertsData);
-  publishAdSubmit();
-  onButtonReset();
-});
+// getDataFromServer((advertsData) => {
+//   activateMap();
+//   mainCoordinatesPin(advertsData);
+//   publishAdSubmit();
+//   onButtonReset();
+// });
