@@ -1,4 +1,5 @@
 import {createMarker, clearMarker} from './map.js';
+import {debounce} from './debounce.js';
 
 const MAX_OFFERS_COUNT = 10;
 
@@ -60,9 +61,9 @@ const renderPinList = (offers) => {
 };
 
 const setFilterChange = (cb) => {
-  formFilterElement.addEventListener('change', () => {
+  formFilterElement.addEventListener('change', debounce(() => {
     cb();
-  });
+  }));
 };
 
 const resetFilter = () => {
