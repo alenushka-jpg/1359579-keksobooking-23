@@ -79,7 +79,7 @@ const mainCoordinatesPin = () => mainPinMarker.on('move', (evt) => {
  */
 const createMarker = (ad) => {
   const icon = L.icon({
-    iconUrl: '/img/pin.svg',
+    iconUrl: './img/pin.svg',
     iconSize: [40, 40],
     iconAnchor: [20, 40],
   });
