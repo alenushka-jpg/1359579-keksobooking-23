@@ -17,14 +17,13 @@ const priceMap = {
   },
 };
 const formFilterElement = document.querySelector('.map__filters');
-const fieldFilterElements = formFilterElement.children;
 const typeFilter = formFilterElement.querySelector('#housing-type');
 const roomsFilter = formFilterElement.querySelector('#housing-rooms');
 const priceFilter = formFilterElement.querySelector('#housing-price');
 const guestsFilter = formFilterElement.querySelector('#housing-guests');
 
 const filterOffers = ({offer}) => {
-  const checkedFeatures = fieldFilterElements.querySelectorAll('input[type="checkbox"]:checked');
+  const checkedFeatures = formFilterElement.querySelectorAll('input[type="checkbox"]:checked');
 
   const checkFeature = () => {
     if (offer.features) {

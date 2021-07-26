@@ -7,38 +7,38 @@ const closeErrorButton = errorPopup.querySelector('.error__button');
 
 const showSuccessModal = () => {
   document.body.appendChild(successPopup);
-  const keydownHandler = (evt) => {
+  const onEscKeyDown = (evt) => {
     if (isEscapeEvent(evt)) {
       evt.preventDefault();
       successPopup.remove();
-      document.removeEventListener('keydown', keydownHandler);
+      document.removeEventListener('keydown', onEscKeyDown);
     }
   };
-  document.addEventListener('keydown', keydownHandler);
+  document.addEventListener('keydown', onEscKeyDown);
   successPopup.addEventListener('click', () => {
     successPopup.remove();
-    document.removeEventListener('keydown', keydownHandler);
+    document.removeEventListener('keydown', onEscKeyDown);
   });
 };
 
-const showErrorModal = () => {
-  errorMessage.textContent = 'Ошибка загрузки данных';
+const showErrorModal = (message) => {
+  errorMessage.textContent = message;
   document.body.appendChild(errorPopup);
-  const keydownHandler = (evt) => {
+  const onEscKeyDown = (evt) => {
     if (isEscapeEvent(evt)) {
       evt.preventDefault();
       errorPopup.remove();
-      document.removeEventListener('keydown', keydownHandler);
+      document.removeEventListener('keydown', onEscKeyDown);
     }
   };
-  document.addEventListener('keydown', keydownHandler);
+  document.addEventListener('keydown', onEscKeyDown);
   closeErrorButton.addEventListener('click', () => {
     errorPopup.remove();
-    document.removeEventListener('keydown', keydownHandler);
+    document.removeEventListener('keydown', onEscKeyDown);
   });
   errorPopup.addEventListener('click', () => {
     errorPopup.remove();
-    document.removeEventListener('keydown', keydownHandler);
+    document.removeEventListener('keydown', onEscKeyDown);
   });
 };
 
