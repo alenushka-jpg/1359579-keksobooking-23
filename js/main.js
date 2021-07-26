@@ -12,13 +12,15 @@ activateMap();
 mainCoordinatesPin();
 getAvatarPreview();
 getPhotoPreview();
-publishAdSubmit();
 addValidationForm();
 
 getDataFromServer((advertsData) => {
   activateMap();
   addPinsToMap(advertsData.slice(0, NUMBER));
   setFilterChange(
+    () => renderPinList(advertsData),
+  );
+  publishAdSubmit(
     () => renderPinList(advertsData),
   );
   enableMapFilters();
